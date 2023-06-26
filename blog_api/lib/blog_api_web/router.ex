@@ -14,10 +14,22 @@ defmodule BlogApiWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", BlogApiWeb do
-    pipe_through :browser
+  # scope "/", BlogApiWeb do
+  #   pipe_through :browser
 
-    get "/", PageController, :home
+  #   get "/", PageController, :home
+  # end
+
+  scope "/" do
+    pipe_through :api
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: BlogApiWeb.Schema,
+      interface: :simple,
+      context: %{pubsub: BlogApiWeb.Endpoint}
+
+    forward "/graphql", Absinthe.Plug,
+      schema: BlogApiWeb.Schema
   end
 
   # Other scopes may use custom stacks.

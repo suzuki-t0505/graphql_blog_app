@@ -23,6 +23,15 @@ defmodule BlogApiWeb.Schema do
     end
   end
 
+  mutation do
+    field :create_post, :post do
+      arg :title, non_null(:string)
+      arg :body, :string
+      arg :type, non_null(:integer)
+      resolve(&Resolver.Posts.create_posts/3)
+    end
+  end
+
   defp parse_datetime(data) do
     with {:ok, naive_datetime} <- Timex.parse(data, "{ISOdate} {ISOtime}"),
       datetime <- Timex.to_datetime(naive_datetime) do

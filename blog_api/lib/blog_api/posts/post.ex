@@ -6,6 +6,7 @@ defmodule BlogApi.Posts.Post do
     field :body, :string
     field :title, :string
     field :type, :integer, default: 1
+    field :submit_datetime, :utc_datetime
 
     timestamps(type: :utc_datetime)
   end
@@ -13,7 +14,7 @@ defmodule BlogApi.Posts.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:title, :body, :type])
+    |> cast(attrs, [:title, :body, :type, :submit_date])
     |> validate_required([:title, :body, :type])
   end
 end

@@ -1,12 +1,14 @@
 defmodule BlogApi.Posts.Post do
   use Ecto.Schema
   import Ecto.Changeset
+  alias BlogApi.Accounts.Account
 
   schema "posts" do
     field :body, :string
     field :title, :string
     field :type, :integer, default: 1
     field :submit_datetime, :utc_datetime
+    belongs_to(:account, Account)
 
     timestamps(type: :utc_datetime)
   end
@@ -14,7 +16,7 @@ defmodule BlogApi.Posts.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:title, :body, :type, :submit_datetime])
+    |> cast(attrs, [:title, :body, :type, :submit_datetime, :account_id])
     |> validate_post()
   end
 

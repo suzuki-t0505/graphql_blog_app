@@ -14,6 +14,10 @@ defmodule BlogApiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :graphql do
+    plug BlogApiWeb.Context
+  end
+
   # scope "/", BlogApiWeb do
   #   pipe_through :browser
 
@@ -21,7 +25,7 @@ defmodule BlogApiWeb.Router do
   # end
 
   scope "/" do
-    pipe_through :api
+    pipe_through :graphql
 
     forward "/graphiql", Absinthe.Plug.GraphiQL,
       schema: BlogApiWeb.Schema,

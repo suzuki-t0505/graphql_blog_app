@@ -111,18 +111,22 @@ defmodule BlogApi.Accounts do
 
   ## Session
 
+  # Base64でエンコードしたtokenを返す
   def generate_account_session_token(account) do
     {token, account_token} = AccountToken.build_session_token(account)
     Repo.insert!(account_token)
-    token
+    "Bearer " <> Base.encode64(token)
   end
 
+  # 引数で受け取ったtokenをBase64でデコードしてaccountを取得する
   def get_account_by_session_token(token) do
+    token = Base.decode64!(token)
     {:ok, query} = AccountToken.verify_session_token_query(token)
     Repo.one(query)
   end
 
   def delete_account_session_token(token) do
+    token = Base.decode64!(token)
     Repo.delete_all(AccountToken.token_and_context_query(token, "session"))
     :ok
   end

@@ -20,9 +20,18 @@ defmodule BlogApi.Resolver.Posts do
     with %Post{} = post <- Posts.get_post(id),
       {:ok, post} <- Posts.update_post(post, args) do
 
-      {:ok, post}
+        {:ok, post}
     else
       _ -> {:error, "Could not update post."}
+    end
+  end
+
+  def delete_post(_root, %{id: id}, _info) do
+    with %Post{} = post <- Posts.get_post(id),
+      {:ok, post} <- Posts.delete_post(post) do
+        {:ok, post}
+    else
+      _ -> {:error, "Could not delete post."}
     end
   end
 end

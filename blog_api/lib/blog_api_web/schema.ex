@@ -38,6 +38,11 @@ defmodule BlogApiWeb.Schema do
       arg :type, non_null(:integer)
       resolve(&Resolver.Posts.update_post/3)
     end
+
+    field :delete_post, :post do
+      arg :id, non_null(:id)
+      resolve(&Resolver.Posts.delete_post/3)
+    end
   end
 
   defp parse_datetime(data) do

@@ -1,6 +1,8 @@
 defmodule BlogApiWeb.Schema do
   use Absinthe.Schema
 
+  alias BlogApi.Resolver
+
   scalar :datetime do
     description "DateTime for 2022-03-01 00:00:00"
     parse &parse_datetime/1
@@ -17,10 +19,9 @@ defmodule BlogApiWeb.Schema do
 
   query do
     field :posts, list_of(:post) do
-      resolve(fn _, _, _ -> {:ok, BlogApi.Posts.list_posts} end)
+      resolve(&Resolver.Posts.get_posts/3)
     end
   end
-
 
   defp parse_datetime(data) do
     with {:ok, naive_datetime} <- Timex.parse(data, "{ISOdate} {ISOtime}"),

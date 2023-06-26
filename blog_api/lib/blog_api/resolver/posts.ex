@@ -6,6 +6,15 @@ defmodule BlogApi.Resolver.Posts do
     {:ok, Posts.list_posts()}
   end
 
+  def get_post(_root, %{id: id}, _info) do
+    case Posts.get_post(id) do
+      nil ->
+        {:error, "Could not get post."}
+
+      %Post{} = post -> {:ok, post}
+    end
+  end
+
   def create_post(_root, args, _info) do
     case Posts.create_post(args) do
       {:ok, post} ->

@@ -21,6 +21,11 @@ defmodule BlogApiWeb.Schema do
     field :posts, list_of(:post) do
       resolve(&Resolver.Posts.get_posts/3)
     end
+
+    field :post, :post do
+      arg :id, non_null(:id)
+      resolve(&Resolver.Posts.get_post/3)
+    end
   end
 
   mutation do

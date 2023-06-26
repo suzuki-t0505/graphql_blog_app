@@ -8,6 +8,7 @@ defmodule BlogApi.Objects.Post do
         field :body, :string
         field :type, :integer
         field :submit_datetime, :datetime
+        field :account_id, :id
       end
 
       object :post_queries do

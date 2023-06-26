@@ -28,7 +28,15 @@ defmodule BlogApiWeb.Schema do
       arg :title, non_null(:string)
       arg :body, :string
       arg :type, non_null(:integer)
-      resolve(&Resolver.Posts.create_posts/3)
+      resolve(&Resolver.Posts.create_post/3)
+    end
+
+    field :update_post, :post do
+      arg :id, non_null(:id)
+      arg :title, non_null(:string)
+      arg :body, :string
+      arg :type, non_null(:integer)
+      resolve(&Resolver.Posts.update_post/3)
     end
   end
 

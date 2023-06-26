@@ -50,6 +50,7 @@ defmodule BlogApi.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
+      {:timex, "~> 3.0"},
       {:absinthe, "~> 1.6"},
       {:absinthe_plug, "~> 1.5"}
     ]

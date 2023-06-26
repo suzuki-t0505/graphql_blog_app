@@ -2,12 +2,6 @@ defmodule BlogApi.Objects.Post do
   alias BlogApi.Resolver
   defmacro __using__(_) do
     quote do
-      scalar :datetime do
-        description "DateTime for 2022-03-01 00:00:00"
-        parse &parse_datetime/1
-        serialize &Calendar.strftime(&1, "%c")
-      end
-
       object :post do
         field :id, :id
         field :title, :string

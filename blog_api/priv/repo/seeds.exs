@@ -1,11 +1,22 @@
-# Script for populating the database. You can run it as:
-#
-#     mix run priv/repo/seeds.exs
-#
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     BlogApi.Repo.insert!(%BlogApi.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+alias BlogApi.Repo
+alias BlogApi.Posts.Post
+
+posts = [
+  %Post{
+    title: "投稿01",
+    body: "これは投稿01です。\nこれは投稿01です。",
+    type: 1
+  },
+  %Post{
+    title: "投稿02",
+    body: "これは投稿02です。\nこれは投稿02です。",
+    type: 1
+  },
+  %Post{
+    title: "投稿03",
+    body: "これは投稿03です。\nこれは投稿03です。",
+    type: 1
+  }
+]
+
+Enum.each(posts, fn post -> Repo.insert!(post) end)

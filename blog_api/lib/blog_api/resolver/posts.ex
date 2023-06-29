@@ -20,6 +20,12 @@ defmodule BlogApi.Resolver.Posts do
     args =  Map.put(args, :account_id, id)
     case Posts.create_post(args) do
       {:ok, post} ->
+        Absinthe.Subscription.publish(
+          BlogApiWeb.Endpoint,
+          post,
+          post_added: Map.get(args, :topic, "no")
+        )
+
         {:ok, post}
 
       {:error, _cs} ->

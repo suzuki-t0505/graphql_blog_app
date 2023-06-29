@@ -27,6 +27,7 @@ defmodule BlogApi.Objects.Post do
           arg :title, non_null(:string)
           arg :body, :string
           arg :type, non_null(:integer)
+          arg :topic, :string
           resolve(&Resolver.Posts.create_post/3)
         end
 

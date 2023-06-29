@@ -25,6 +25,7 @@ defmodule BlogApi.Posts.Post do
       cs
       |> validate_required(:title)
       |> validate_required(:type)
+      |> validate_required(:account_id)
 
     unless get_field(cs, :type, 0) == 0 do
       cs

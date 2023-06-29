@@ -12,4 +12,22 @@ defmodule BlogApiWeb.Schema do
     import_fields :post_mutations
     import_fields :account_mutations
   end
+
+  subscription do
+    field :post_added, :post do
+      arg :topic, non_null(:string)
+
+      config fn args, _ ->
+        {:ok, topic: args.topic}
+      end
+
+      trigger :create_post, topic: fn post ->
+        post.title
+      end
+
+      resolve fn post, _, _ ->
+        {:ok, post}
+      end
+    end
+  end
 end

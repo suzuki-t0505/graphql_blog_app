@@ -17,7 +17,8 @@ defmodule BlogApi.Application do
       # Start Finch
       {Finch, name: BlogApi.Finch},
       # Start the Endpoint (http/https)
-      BlogApiWeb.Endpoint
+      BlogApiWeb.Endpoint,
+      {Absinthe.Subscription, BlogApiWeb.Endpoint}
       # Start a worker by calling: BlogApi.Worker.start_link(arg)
       # {BlogApi.Worker, arg}
     ]

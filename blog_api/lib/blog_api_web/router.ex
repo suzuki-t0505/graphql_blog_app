@@ -29,11 +29,14 @@ defmodule BlogApiWeb.Router do
 
     forward "/graphiql", Absinthe.Plug.GraphiQL,
       schema: BlogApiWeb.Schema,
-      interface: :simple,
-      context: %{pubsub: BlogApiWeb.Endpoint}
+      interface: :advanced,
+      context: %{pubsub: BlogApiWeb.Endpoint},
+      socket: BlogApiWeb.UserSocket
 
     forward "/graphql", Absinthe.Plug,
-      schema: BlogApiWeb.Schema
+      schema: BlogApiWeb.Schema,
+      context: %{pubsub: BlogApiWeb.Endpoint},
+      socket: BlogApiWeb.UserSocket
   end
 
   # Other scopes may use custom stacks.

@@ -27,7 +27,7 @@ defmodule BlogApi.Objects.Account do
           resolve(&Resolver.Accounts.log_in_account/3)
         end
 
-        field :register_account, :auto_play_load do
+        field :register_account, :account do
           arg :email, non_null(:string)
           arg :password, non_null(:string)
           resolve(&Resolver.Accounts.register_account/3)

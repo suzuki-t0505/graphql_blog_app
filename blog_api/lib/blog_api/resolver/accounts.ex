@@ -24,8 +24,7 @@ defmodule BlogApi.Resolver.Accounts do
   def register_account(_root, args, _info) do
     case Accounts.register_account(args) do
       {:ok, %Account{} = account} ->
-        token = Accounts.generate_account_session_token(account)
-        {:ok, %{account: account, token: token}}
+        {:ok, account}
 
       {:error, _cs} ->
         {:error, "Could not register account. "}

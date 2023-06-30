@@ -5,14 +5,14 @@ defmodule BlogApiWeb.UserSocket do
 
   alias BlogApi.Accounts
 
-  def connect(%{"authorization" => "Bearer " <> token} = test, socket) do
+  def connect(%{"authorization" => "Bearer " <> token}, socket) do
     current_account = Accounts.get_account_by_session_token(token)
     socket = Absinthe.Phoenix.Socket.put_options(socket, context: %{current_account: current_account})
 
     {:ok, socket}
   end
 
-  def connect(_params, _socket), do: :error
+  def connect(_params, _socket), do: {:error, %{reason: "abcdefg"}}
 
 
   def id(_socket), do: nil

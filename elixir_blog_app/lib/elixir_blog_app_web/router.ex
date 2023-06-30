@@ -1,5 +1,6 @@
 defmodule ElixirBlogAppWeb.Router do
   use ElixirBlogAppWeb, :router
+  import ElixirBlogAppWeb.AccountAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -8,6 +9,7 @@ defmodule ElixirBlogAppWeb.Router do
     plug :put_root_layout, html: {ElixirBlogAppWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_account
   end
 
   pipeline :api do
@@ -17,7 +19,38 @@ defmodule ElixirBlogAppWeb.Router do
   scope "/", ElixirBlogAppWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    # get "/", PageController, :home
+
+    live_session :home_authenticated, on_mount: [{ElixirBlogAppWeb.AccountAuth, :mount_current_account}] do
+      live "/", PageLive, :index
+    end
+  end
+
+  # 認証していない場合のルート
+  scope "/", ElixirBlogAppWeb do
+    pipe_through [:browser, :redirect_if_account_is_authenticated]
+
+    live_session :redirect_if_account_is_authenticated, on_mount: [{ElixirBlogAppWeb.AccountAuth, :redirect_if_account_is_authenticated}] do
+      live "/log_in", LogInLive
+      live "/register", RegistrationLive
+    end
+    post "/log_in", AccountSessionController, :create
+  end
+
+  scope "/", ElixirBlogAppWeb do
+    pipe_through [:browser, :require_authenticated_account]
+
+    live_session :require_authenticated_account, on_mount: [{ElixirBlogAppWeb.AccountAuth, :ensure_authenticated}] do
+      live "/post/new", PostLive, :new
+    end
+  end
+
+  scope "/", ElixirBlogAppWeb do
+    pipe_through :browser
+    delete "/log_out", AccountSessionController, :delete
+    live_session :current_account, on_mount: [{ElixirBlogAppWeb.AccountAuth, :mount_current_account}] do
+
+    end
   end
 
   # Other scopes may use custom stacks.

@@ -12,6 +12,17 @@
     </script>
   </head>
   <body class="bg-white antialiased">
+    <div>
+      <span :if={@current_account}>
+        <%= @current_account["email"] %> | 
+        <.link href={~p"/post/new"}>new post</.link> |
+        <.link href={~p"/log_out"} method="delete">log out</.link>
+      </span>
+      <span :if={!@current_account}>
+        <.link href={~p"/log_in"}>log in</.link> |
+        <.link href={~p"/register"}>register</.link>
+      </span>
+    </div>
     <%= @inner_content %>
   </body>
 </html>

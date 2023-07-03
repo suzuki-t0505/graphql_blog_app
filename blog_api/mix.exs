@@ -54,7 +54,8 @@ defmodule BlogApi.MixProject do
       {:timex, "~> 3.0"},
       {:absinthe, "~> 1.6"},
       {:absinthe_plug, "~> 1.5"},
-      {:absinthe_phoenix, "~> 2.0.2"}
+      {:absinthe_phoenix, "~> 2.0.2"},
+      {:cors_plug, "~> 3.0"}
     ]
   end
 

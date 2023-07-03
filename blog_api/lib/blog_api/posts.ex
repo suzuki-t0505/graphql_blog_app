@@ -18,7 +18,9 @@ defmodule BlogApi.Posts do
 
   """
   def list_posts do
-    Repo.all(Post)
+    Post
+    |> preload(:account)
+    |> Repo.all()
   end
 
   @doc """

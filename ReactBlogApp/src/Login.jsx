@@ -3,6 +3,7 @@ import { View, TextInput, StyleSheet, SafeAreaView, Button } from 'react-native'
 import { Header } from './Header'
 import { gql, useMutation } from "@apollo/client";
 import { AUTH_TOKEN } from './constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LOGIN_MUTATION = gql`
   mutation($email: String! $password: String!){
@@ -19,7 +20,7 @@ const LOGIN_MUTATION = gql`
 export const Login = (props) => {
   const [formState, setFormState] = useState(
     {
-      email: 'test@sample.com',
+      email: '',
       password: ''
     }
   );
@@ -38,10 +39,7 @@ export const Login = (props) => {
       password: formState.password
     },
     onCompleted: ({logInAccount}) => {
-
-      console.log('call onCompleted')
-      console.log(logInAccount);
-      localStorage.setItem(AUTH_TOKEN, logInAccount.token);
+      AsyncStorage.setItem(AUTH_TOKEN, logInAccount.token);
       props.navigation.navigate('Home')
     }
   })

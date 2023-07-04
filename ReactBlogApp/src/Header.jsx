@@ -1,6 +1,23 @@
+import { gql, useMutation } from "@apollo/client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+const LOGOUT_MUTATION = gql`
+  mutation{
+    logOutAccount
+  }
+`
+
 export const Header = (props) => {
+
+  const [logout] = useMutation(LOGOUT_MUTATION,
+    {
+      onCompleted: ({logOutAccount}) => {
+        AsyncStorage.clear
+        props.navigation.navigate('Home')
+      }
+    }
+    )
   return (
     <View style={style.header}>
       <View>
@@ -10,12 +27,21 @@ export const Header = (props) => {
         />
       </View>
       {props.authToken ? (
-        <View>
-          <Button
-            title="NewPost"
-            onPress={() => props.navigation.navigate("NewPost")}
-          />
-        </View>
+        <>
+          <View>
+            <Button
+              title="NewPost"
+              onPress={() => props.navigation.navigate("NewPost")}
+              />
+          </View>
+
+          <View>
+            <Button
+              title="Logout"
+              onPress={logout}
+            />
+            </View>
+          </>
         ) : null
       }
       

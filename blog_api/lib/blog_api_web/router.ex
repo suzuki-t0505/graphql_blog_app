@@ -15,7 +15,8 @@ defmodule BlogApiWeb.Router do
   end
 
   pipeline :graphql do
-    plug CORSPlug, origin: "*"
+    # plug Corsica, origins: "*", allow_headers: ~w(accept content-type authorization)
+    plug CORSPlug, origin: "*", headers: ~w(accept content-type authorization)
     plug BlogApiWeb.Context
   end
 

@@ -2,16 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { PostList } from './src/PostList';
+import { NewPost } from './src/NewPost';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-    </View>
-  )
-};
+import { Login } from './src/Login';
+import { AUTH_TOKEN } from './src/constants';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,27 +20,28 @@ const client = new ApolloClient({
 });
 
 export default function App() {
+  const authToken = localStorage.getItem(AUTH_TOKEN)
   return (
-    <>
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen}/>
-      </Stack.Navigator>
-    </NavigationContainer>
     <ApolloProvider client={client}>
-      <View style={styles.container}>
-        <PostList/>
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen name="Home">
+            {(props) => <PostList {...props} authToken={authToken} />}
+          </Stack.Screen>
+          {authToken ? (
+            <Stack.Screen name="NewPost">
+              {(props) => <NewPost {...props} authToken={authToken} />}
+            </Stack.Screen>
+            ) : null
+          }
+          {!authToken ? (
+            <Stack.Screen name="Login">
+              {(props) => <Login {...props} authToken={authToken} />}
+            </Stack.Screen>
+            ) : null
+          }
+        </Stack.Navigator>
+      </NavigationContainer>
     </ApolloProvider>
-    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

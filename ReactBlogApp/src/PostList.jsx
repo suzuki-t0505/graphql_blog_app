@@ -1,7 +1,8 @@
 
 import { gql, useQuery } from "@apollo/client";
-import { View } from "react-native-web";
+import { StyleSheet, View, Text } from "react-native";
 import { PostCard } from "./PostCard";
+import { Header } from "./Header";
 
 const POST_QUERY = gql`
   {
@@ -16,16 +17,24 @@ const POST_QUERY = gql`
   }
 `;
 
-export const PostList = () => {
-  const { data } = useQuery(POST_QUERY);
+export const PostList = (props) => {
+  const { loading, data } = useQuery(POST_QUERY);
 
   return(
     <View>
-      {data && (
-        <>
-          {data.posts.map(post => <PostCard key={post.id} post={post} />)}
-        </>
-      )}
+      <Header {...props}/>
+      <View style={styles.container}>
+        {!loading && data ? data.posts.map(post => <PostCard key={post.id} post={post} />) : <Text>Loading...</Text>}
+      </View>
     </View>
   )
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

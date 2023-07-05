@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { View, TextInput, StyleSheet, SafeAreaView, Button } from 'react-native'
+import { View, TextInput, StyleSheet, SafeAreaView, Button, Text } from 'react-native'
 import { Header } from './Header'
 import { gql, useMutation } from "@apollo/client";
 import { AUTH_TOKEN } from './constants';
@@ -39,8 +39,8 @@ export const Login = (props) => {
       password: formState.password
     },
     onCompleted: ({logInAccount}) => {
-      AsyncStorage.setItem(AUTH_TOKEN, logInAccount.token);
-      props.navigation.navigate('Home')
+      props.saveAuthToken(logInAccount.token);
+      props.navigation.navigate('Home');
     }
   })
 
@@ -52,12 +52,14 @@ export const Login = (props) => {
     <View>
       <Header {...props} />
       <SafeAreaView>
+        <Text style={styles.label}>Email</Text>
         <TextInput 
           style={styles.input} 
           inputMode='email' 
           value={formState.email}
           onChange={changeEmail}
         />
+        <Text style={styles.label}>Password</Text>
         <TextInput 
           style={styles.input} 
           inputMode='text' 
@@ -76,8 +78,14 @@ export const Login = (props) => {
 const styles = StyleSheet.create({
   input: {
     height: 40,
-    margin: 12,
+    marginHorizontal: 12,
+    marginVertical: 6,
     borderWidth: 1,
     padding: 10
+  },
+  label: {
+    fontWeight: 'bold',
+    marginLeft: 12,
+    marginTop: 10
   }
 });

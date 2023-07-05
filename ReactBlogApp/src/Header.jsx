@@ -9,15 +9,15 @@ const LOGOUT_MUTATION = gql`
 `
 
 export const Header = (props) => {
-
   const [logout] = useMutation(LOGOUT_MUTATION,
     {
       onCompleted: ({logOutAccount}) => {
-        AsyncStorage.clear
+        props.deleteAuthToken();
         props.navigation.navigate('Home')
       }
     }
-    )
+  );
+
   return (
     <View style={style.header}>
       <View>
@@ -53,7 +53,7 @@ export const Header = (props) => {
           />
         </View>
         ) : null
-      }
+      } 
     </View>
   )
 }

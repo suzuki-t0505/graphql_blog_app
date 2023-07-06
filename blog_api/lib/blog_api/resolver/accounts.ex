@@ -31,12 +31,18 @@ defmodule BlogApi.Resolver.Accounts do
     end
   end
 
-  def log_out_account(_root, _args, %{context: %{token: token}}) do
+  # def log_out_account(_root, _args, %{context: %{token: token}}) do
+  #   Accounts.delete_account_session_token(token)
+  #   {:ok, "log out account"}
+  # end
+
+  # def log_out_account(_root, _args, _info) do
+  #   {:error, "invalid authorization token."}
+  # end
+
+  def log_out_account(_root, _args, %{context: context}) do
+    token = Map.get(context, :token, "")
     Accounts.delete_account_session_token(token)
     {:ok, "log out account"}
-  end
-
-  def log_out_account(_root, _args, _info) do
-    {:error, "invalid authorization token."}
   end
 end

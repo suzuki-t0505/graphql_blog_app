@@ -1,13 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache, split } from "@apollo/client";
 import { setContext } from '@apollo/client/link/context';
-import { useCallback, useEffect, useState } from 'react';
+import { WebSocketLink} from '@apollo/client/link/ws';
+import { getMainDefinition } from "@apollo/client/utilities";
+import { useCallback, useEffect } from 'react';
 import { useAuthToken } from './src/hooks/useAuthToken';
 import { Routers } from './src/Routers';
-
+import * as AbsintheSocket from "@absinthe/socket";
+import { createAbsintheSocketLink } from "@absinthe/socket-apollo-link";
+import { hasSubscription } from "@jumpn/utils-graphql";
 
 export default function App() {
   const { authToken, getAuthToken, saveAuthToken, deleteAuthToken } = useAuthToken();
+
+  useEffect(() => {
+    getAuthToken();
+  }, [authToken]);
 
   const httpLink = createHttpLink({
     uri: 'http://localhost:4000/graphql'
@@ -17,14 +24,52 @@ export default function App() {
     return {headers: {...headers, authorization: authToken ? authToken : ''}}
   });
 
+  const authedHttpLink = authLink.concat(httpLink);
+
+  const { Socket } = require('phoenix-js');
+
+  const phoenixSocket = new Socket('ws://localhost:4000/socket', {
+    params: { authorization: authToken }
+  });
+
+  console.log(phoenixSocket);
+
+  const absinthSocket = AbsintheSocket.create(phoenixSocket);
+
+  const websocketLink = createAbsintheSocketLink(absinthSocket);
+
+  const link = split(
+    operation => hasSubscription(operation.query),
+    websocketLink,
+    authedHttpLink
+  );
+
+  // const wsLink = new WebSocketLink({
+  //   uri: 'ws://localhost:4000/socket/websocket',
+  //   options: {
+  //     reconnect: true,
+  //     connectionParams: {
+  //       authToken: authToken
+  //     }
+  //   }
+  // });
+
+  // const link = split(
+  //   ({query}) => {
+  //     const { kind, operation } = getMainDefinition(query);
+  //     return (
+  //       kind === 'OperationDefinition' &&
+  //       operation === 'subscription'
+  //     );
+  //   },
+  //   wsLink,
+  //   authLink.concat(httpLink)
+  // );
+
   const client = useCallback(new ApolloClient({
-    link: authLink.concat(httpLink),
+    link: link,
     cache: new InMemoryCache()
   }), [authToken]);
-
-  useEffect(() => {
-    getAuthToken();
-  }, [authToken])
   
   return (
     <ApolloProvider client={client}>

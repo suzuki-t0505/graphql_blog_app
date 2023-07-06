@@ -4,12 +4,15 @@ import { useCallback, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 
 const CREATE_POST_MUTATION = gql`
-  mutation($title: String! $body: String! $type: Int!){
-    createPost(title: $title body: $body type: $type){
+  mutation($title: String! $body: String! $type: Int! $topic: String!){
+    createPost(title: $title body: $body type: $type topic: $topic){
       id
       title
       body
       type
+      account {
+        email
+      }
     }
   }
 `
@@ -45,9 +48,11 @@ export const NewPost = (props) => {
     variables: {
       title: formState.title,
       body: formState.body,
-      type: formState.type
+      type: formState.type,
+      topic: "all"
     },
     onCompleted: (test => {
+      console.log(test)
       props.refetch();
       props.navigation.navigate('Home');
     })

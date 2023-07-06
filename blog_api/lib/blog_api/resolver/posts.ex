@@ -25,8 +25,8 @@ defmodule BlogApi.Resolver.Posts do
           post,
           post_added: Map.get(args, :topic, "no")
         )
-
-        {:ok, post}
+        
+        {:ok, Posts.get_post(post.id)}
 
       {:error, _cs} ->
         {:error, "Could not create post."}

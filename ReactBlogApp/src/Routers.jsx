@@ -19,10 +19,39 @@ const POST_QUERY = gql`
   }
 `;
 
+const POST_ADDED_SUBSCRIPTION = gql`
+  subscription{
+    postAdded(topic: "all"){
+      id
+      title
+      body
+      account{
+        email
+      }
+    }
+  }
+`
+
 export const Routers = (props) => {
   const Stack = createNativeStackNavigator();
   const {authToken, saveAuthToken, deleteAuthToken} = props;
-  const { loading, data, refetch } = useQuery(POST_QUERY)
+  const { loading, data, refetch, subscribeToMore } = useQuery(POST_QUERY);
+
+  subscribeToMore({
+    document: POST_ADDED_SUBSCRIPTION,
+    updateQuery: (prev, { subscriptionData }) => {
+      console.log(prev)
+      console.log(subscriptionData)
+      if (!subscriptionData.data) return prev;
+      const newPost = subscriptionData.data.postAdded;
+      const exists = prev.posts.find(({ id }) => id === newPost.id);
+      if (exists) return prev;
+
+      return Object.assign({}, prev, {
+        posts: [newPost, ...prev.posts]
+      });
+    }
+  });
 
   return (
     <NavigationContainer>

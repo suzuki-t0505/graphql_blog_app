@@ -40,7 +40,7 @@ defmodule BlogApi.Posts do
   def get_post!(id), do: Repo.get!(Post, id)
 
   def get_post(id) do
-    Repo.get(Post, id)
+    Repo.get(Post, id) |> Repo.preload(:account)
   end
 
   @doc """

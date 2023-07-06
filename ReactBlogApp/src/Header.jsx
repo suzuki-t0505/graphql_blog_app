@@ -46,12 +46,20 @@ export const Header = (props) => {
       }
       
       {!props.authToken ? (
-        <View>
-          <Button
-            title="Login"
-            onPress={() => props.navigation.navigate("Login")}
-          />
-        </View>
+        <>
+          <View>
+            <Button
+              title="Login"
+              onPress={() => props.navigation.navigate("Login")}
+              />
+          </View>
+          <View>
+            <Button
+              title="Register"
+              onPress={() => props.navigation.navigate("Register")}
+              />
+          </View>
+        </>
         ) : null
       } 
     </View>

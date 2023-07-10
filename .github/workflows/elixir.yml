@@ -32,5 +32,6 @@ jobs:
           otp-version: '25.3'
           elixir-version: '1.14.5'
       - run: cd blog_api
+      - run: pwd
       - run: mix deps.get
       - run: mix test

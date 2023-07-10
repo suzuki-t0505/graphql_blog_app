@@ -25,8 +25,8 @@ defmodule BlogApiWeb.Schema do
         post.title
       end
 
-      resolve fn post, _, _ ->
-        {:ok, post}
+      resolve fn post, _t, _a ->
+        {:ok, BlogApi.Posts.get_post(post.id)}
       end
     end
   end

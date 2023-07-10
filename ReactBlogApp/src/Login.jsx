@@ -1,4 +1,4 @@
-import { View, TextInput, StyleSheet, SafeAreaView, Button, Text } from 'react-native'
+import { View, SafeAreaView, Button } from 'react-native'
 import { Header } from './Header'
 import { AuthForm } from './AuthForm';
 import { useAuthMutation } from './hooks/useAuthMutation';

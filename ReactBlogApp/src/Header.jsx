@@ -1,6 +1,5 @@
 import { gql, useMutation } from "@apollo/client";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button, StyleSheet, View } from "react-native";
 
 const LOGOUT_MUTATION = gql`
   mutation{

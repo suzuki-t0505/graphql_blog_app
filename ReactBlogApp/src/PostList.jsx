@@ -1,21 +1,6 @@
-import { gql, useQuery } from "@apollo/client";
 import { StyleSheet, View, Text } from "react-native";
 import { PostCard } from "./PostCard";
 import { Header } from "./Header";
-import { useCallback, useEffect } from "react";
-
-const POST_QUERY = gql`
-  {
-    posts{
-      id
-      title
-      submitDatetime
-      account{
-        email
-      }
-    }
-  }
-`;
 
 export const PostList = (props) => {
   return(

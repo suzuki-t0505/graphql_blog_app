@@ -4,7 +4,7 @@ defmodule BlogApi.Resolver.Posts do
   alias BlogApi.Accounts.Account
 
   def get_posts(_root, _args, _info) do
-    {:ok, Posts.list_posts()}
+    {:ok, Posts.list_posts() |> Enum.sort(:desc)}
   end
 
   def get_post(_root, %{id: id}, _info) do
@@ -25,7 +25,7 @@ defmodule BlogApi.Resolver.Posts do
           post,
           post_added: Map.get(args, :topic, "no")
         )
-        
+
         {:ok, Posts.get_post(post.id)}
 
       {:error, _cs} ->

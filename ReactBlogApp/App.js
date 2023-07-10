@@ -1,7 +1,5 @@
 import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache, split } from "@apollo/client";
 import { setContext } from '@apollo/client/link/context';
-import { WebSocketLink} from '@apollo/client/link/ws';
-import { getMainDefinition } from "@apollo/client/utilities";
 import { useCallback, useEffect } from 'react';
 import { useAuthToken } from './src/hooks/useAuthToken';
 import { Routers } from './src/Routers';
@@ -29,14 +27,15 @@ export default function App() {
   const { Socket } = require('phoenix-js');
 
   const phoenixSocket = new Socket('ws://localhost:4000/socket', {
-    params: { authorization: authToken }
+    params: { authorization: authToken },
+    logger: (kind, msg, data) => {
+      console.log(`${kind}: ${msg}`, data)
+    }
   });
-
-  console.log(phoenixSocket);
 
   const absinthSocket = AbsintheSocket.create(phoenixSocket);
 
-  const websocketLink = createAbsintheSocketLink(absinthSocket);
+  const websocketLink =  createAbsintheSocketLink(absinthSocket);
 
   const link = split(
     operation => hasSubscription(operation.query),
@@ -70,7 +69,7 @@ export default function App() {
     link: link,
     cache: new InMemoryCache()
   }), [authToken]);
-  
+
   return (
     <ApolloProvider client={client}>
       <Routers authToken={authToken} getAuthToken={getAuthToken} saveAuthToken={saveAuthToken} deleteAuthToken={deleteAuthToken} />

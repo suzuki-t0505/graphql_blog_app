@@ -25,6 +25,7 @@ const POST_ADDED_SUBSCRIPTION = gql`
       id
       title
       body
+      submitDatetime
       account{
         email
       }
@@ -46,6 +47,8 @@ export const Routers = (props) => {
       const newPost = subscriptionData.data.postAdded;
       const exists = prev.posts.find(({ id }) => id === newPost.id);
       if (exists) return prev;
+
+      console.log(Object.assign({}, prev, {posts: [newPost, ...prev.posts]}))
 
       return Object.assign({}, prev, {
         posts: [newPost, ...prev.posts]

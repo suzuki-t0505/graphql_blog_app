@@ -25,6 +25,11 @@ jobs:
         otp: ['25.3']
         
     steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '25.3'
+          elixir-version: '1.14.5'
       - name: Install dependencies
         run: cd ./blog_api && mix deps.get && mix deps.compile
         
@@ -47,5 +52,4 @@ jobs:
         with:
           otp-version: '25.3'
           elixir-version: '1.14.5'
-      - run: cd ./blog_api && mix deps.get
       - run: cd ./blog_api && mix test

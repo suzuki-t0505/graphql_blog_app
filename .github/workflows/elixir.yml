@@ -26,11 +26,10 @@ jobs:
         env:
           POSTGRES_PASSWORD: postgres
     steps:
-      - working-directory: ./blog_api
       - uses: actions/checkout@v2
       - uses: erlef/setup-beam@v1
         with:
           otp-version: '25.3'
           elixir-version: '1.14.5'
-      - run: mix deps.get
-      - run: mix test
+      - run: cd ./blog_api && mix deps.get
+      - run: cd ./blog_api && mix test

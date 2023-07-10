@@ -31,6 +31,6 @@ jobs:
         with:
           otp-version: '25.3'
           elixir-version: '1.14.5'
+      - working-directory: ./blog_api
       - run: mix deps.get
       - run: mix test
-      - working-directory: ./blog_api

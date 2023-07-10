@@ -31,6 +31,8 @@ jobs:
         with:
           otp-version: '25.3'
           elixir-version: '1.14.5'
+      - run: ls
+      - run: echo $HOME
       - run: cd blog_api
       - run: pwd
       - run: mix deps.get

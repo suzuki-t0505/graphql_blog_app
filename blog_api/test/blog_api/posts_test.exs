@@ -1,63 +1,82 @@
 defmodule BlogApi.PostsTest do
   use BlogApi.DataCase
 
+  import BlogApi.PostsFixtures
+  import BlogApi.AccountsFixtures
+
   alias BlogApi.Posts
+  alias BlogApi.Repo
 
-  describe "posts" do
-    alias BlogApi.Posts.Post
+  setup do
+    account = account_fixture()
+    %{account: account}
+  end
 
-    import BlogApi.PostsFixtures
+  describe "posts/0" do
+    test "list_posts/0 returns all posts", %{account: %{id: account_id}} do
+      posts =
+        Enum.map(~w(test01 test02 test03),
+          fn title -> Repo.preload(post_fixture(%{title: title, account_id: account_id}), :account)
+        end)
 
-    @invalid_attrs %{body: nil, title: nil, type: nil}
-
-    test "list_posts/0 returns all posts" do
-      post = post_fixture()
-      assert Posts.list_posts() == [post]
+      assert Posts.list_posts() == posts
     end
 
-    test "get_post!/1 returns the post with given id" do
-      post = post_fixture()
-      assert Posts.get_post!(post.id) == post
+    test "list_posts/0 returns no posts" do
+      assert Posts.list_posts() == []
+    end
+  end
+
+  describe "get_post/1" do
+    setup %{account: %{id: account_id}} do
+      post = Repo.preload(post_fixture(%{account_id: account_id}), :account)
+      %{post: post}
     end
 
-    test "create_post/1 with valid data creates a post" do
-      valid_attrs = %{body: "some body", title: "some title", type: 42}
-
-      assert {:ok, %Post{} = post} = Posts.create_post(valid_attrs)
-      assert post.body == "some body"
-      assert post.title == "some title"
-      assert post.type == 42
+    test "get_post/1 returns post", %{post: post} do
+      assert Posts.get_post(post.id) == post
     end
 
-    test "create_post/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Posts.create_post(@invalid_attrs)
+    test "get_post/1 return no post" do
+      assert Posts.get_post(0) == nil
+    end
+  end
+
+  describe "create_post/1" do
+    test "create_post/1 returns {:ok, post}", %{account: %{id: account_id}} do
+      assert {:ok, post} = Posts.create_post(%{title: "test", body: "test", type: 1, account_id: account_id})
+      assert %Posts.Post{title: "test", body: "test", type: 1, account_id: ^account_id} = post
     end
 
-    test "update_post/2 with valid data updates the post" do
-      post = post_fixture()
-      update_attrs = %{body: "some updated body", title: "some updated title", type: 43}
+    test "create_post/1 return {:error, cs}" do
+      assert {:error, %{valid?: false}} = Posts.create_post()
+    end
+  end
 
-      assert {:ok, %Post{} = post} = Posts.update_post(post, update_attrs)
-      assert post.body == "some updated body"
-      assert post.title == "some updated title"
-      assert post.type == 43
+  describe "update_post/2" do
+    setup %{account: %{id: account_id}} do
+      post = post_fixture(%{account_id: account_id})
+      %{post: post}
     end
 
-    test "update_post/2 with invalid data returns error changeset" do
-      post = post_fixture()
-      assert {:error, %Ecto.Changeset{}} = Posts.update_post(post, @invalid_attrs)
-      assert post == Posts.get_post!(post.id)
+    test "update_post/2 returns {:ok, post}", %{post: %{id: post_id} = post} do
+      assert {:ok, %{id: ^post_id} = update_post} = Posts.update_post(post, %{title: "change title", body: "change body", type: 2})
+      assert %Posts.Post{title: "change title", body: "change body", type: 2, id: ^post_id} = update_post
     end
 
-    test "delete_post/1 deletes the post" do
-      post = post_fixture()
-      assert {:ok, %Post{}} = Posts.delete_post(post)
-      assert_raise Ecto.NoResultsError, fn -> Posts.get_post!(post.id) end
+    test "update_post/2 returns {:error, cs}", %{post: post} do
+      assert {:error, %{valid?: false}} = Posts.update_post(post, %{title: ""})
+    end
+  end
+
+  describe "delete_post/1" do
+    setup %{account: %{id: account_id}} do
+      post = post_fixture(%{account_id: account_id})
+      %{post: post}
     end
 
-    test "change_post/1 returns a post changeset" do
-      post = post_fixture()
-      assert %Ecto.Changeset{} = Posts.change_post(post)
+    test "delete_post/1 returns {:ok, post}", %{post: %{id: post_id} = post} do
+      assert {:ok, %{id: ^post_id}} = Posts.delete_post(post)
     end
   end
 end

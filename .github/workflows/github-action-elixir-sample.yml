@@ -23,8 +23,6 @@ jobs:
             deps
             _build
           key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
-          restore-keys: |
-            ${{runner.os}}-mix-
       - name: Install dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |

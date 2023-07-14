@@ -1,3 +1,4 @@
+name: GitHub Actions Elixir Sample
 on: push
 
 jobs:
@@ -23,10 +24,6 @@ jobs:
             blog_api/deps
             blog_api/_build
           key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
-      - name: check
-        run: |
-          ls $HOME
-          ls $HOME/work
       - name: Install dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
@@ -35,17 +32,7 @@ jobs:
           mix local.hex --force
           mix deps.get
           mix deps.compile
-          
-  check:
-    needs: dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Github
-        uses: actions/checkout@v2
-      - name: current_directory
-        run: pwd
-      - name: current_directory for ls
-        run: ls
+          MIX_ENV=test mix deps.compile
           
   mix-test:
     needs: dependencies

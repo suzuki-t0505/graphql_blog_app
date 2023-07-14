@@ -57,7 +57,7 @@ jobs:
           path: |
             blog_api/deps
             blog_api/_build
-            blog_api/plts
+            blog_api/priv/plts
           key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
       - run: mix dialyzer --no-check --ignore-exit-status
     
@@ -90,7 +90,7 @@ jobs:
           path: |
             blog_api/deps
             blog_api/_build
-            blog_api/plts
+            blog_api/priv/plts
           key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
       - run: mix test
       

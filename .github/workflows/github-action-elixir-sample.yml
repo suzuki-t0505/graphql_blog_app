@@ -3,10 +3,6 @@ on: push
 jobs:
   dependencies:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: blog_api
     steps:
       - name: Checkout Github
         uses: actions/checkout@v2
@@ -30,6 +26,7 @@ jobs:
       - name: Install dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |
+          cd blog_api
           mix local.rebar --force
           mix local.hex --force
           mix deps.get

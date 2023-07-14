@@ -23,6 +23,7 @@ jobs:
           path: |
             blog_api/deps
             blog_api/_build
+            blog_api/priv/plts
           key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
       - name: Install dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
@@ -32,6 +33,34 @@ jobs:
           mix deps.get
           mix deps.compile
           MIX_ENV=test mix deps.compile
+          mix dialyzer --plt
+          
+  mix-dializer:
+    needs: dependencies
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: blog_api
+    steps:
+      - name: Checkout Github
+        uses: actions/checkout@v2
+      - name: Set up Erlang/OTP enviroment
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: '25.3'
+          elixir-version: '1.14.5'
+      - name: Retrieve cached dependencies
+        uses: actions/cache@v3
+        id: mix-cache
+        with:
+          path: |
+            blog_api/deps
+            blog_api/_build
+            blog_api/plts
+          key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
+      - run: mix dialyzer --no-check --ignore-exit-status
+    
           
   mix-test:
     needs: dependencies
@@ -61,8 +90,7 @@ jobs:
           path: |
             blog_api/deps
             blog_api/_build
+            blog_api/plts
           key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
-      - name: check test
-        run: ls
       - run: mix test
       

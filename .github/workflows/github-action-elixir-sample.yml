@@ -46,10 +46,6 @@ jobs:
   mix-test:
     needs: dependencies
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: blog_api
     services:
       db:
         image: postgres:latest
@@ -69,8 +65,10 @@ jobs:
         id: mix-cache
         with:
           path: |
-            deps
-            _build
+            blog_api/deps
+            blog_api/_build
           key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
-      - run: mix test
+      - run: |
+          cd blog_api
+          mix test
       

@@ -69,8 +69,8 @@ jobs:
         id: mix-cache
         with:
           path: |
-            blog_api/deps
-            blog_api/_build
+            deps
+            _build
           key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
       - run: mix test
       

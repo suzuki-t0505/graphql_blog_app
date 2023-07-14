@@ -3,6 +3,10 @@ on: push
 jobs:
   dependencies:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: blog_api
     steps:
       - name: Checkout Github
         uses: actions/checkout@v2

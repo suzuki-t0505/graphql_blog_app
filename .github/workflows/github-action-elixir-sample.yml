@@ -21,8 +21,8 @@ jobs:
         id: mix-cache
         with:
           path: |
-            deps
-            _build
+            blog_api/deps
+            blog_api/_build
           key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
       - name: Install dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
@@ -59,8 +59,8 @@ jobs:
         id: mix-cache
         with:
           path: |
-            deps
-            _build
+            blog_api/deps
+            blog_api/_build
           key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
       - name: check test
         run: ls

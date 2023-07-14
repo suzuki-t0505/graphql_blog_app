@@ -76,5 +76,7 @@ jobs:
             blog_api/deps
             blog_api/_build
           key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
+      - name: check test
+        run: ls
       - run: mix test
       

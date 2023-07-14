@@ -55,7 +55,8 @@ defmodule BlogApi.MixProject do
       {:absinthe, "~> 1.6"},
       {:absinthe_plug, "~> 1.5"},
       {:absinthe_phoenix, "~> 2.0.2"},
-      {:cors_plug, "~> 3.0"}
+      {:cors_plug, "~> 3.0"},
+      {:dialyxir, "~> 1.3", only: [:dev], runtime: false}
     ]
   end
 

@@ -6,7 +6,8 @@ defmodule BlogApi.Accounts do
   import Ecto.Query, warn: false
   alias BlogApi.Repo
 
-  alias BlogApi.Accounts.{Account, AccountToken, AccountNotifier}
+  # alias BlogApi.Accounts.{Account, AccountToken, AccountNotifier}
+  alias BlogApi.Accounts.{Account, AccountToken}
 
   ## Database getters
   def get_account_by_email(email) when is_binary(email) do
@@ -72,22 +73,22 @@ defmodule BlogApi.Accounts do
     |> Ecto.Multi.delete_all(:tokens, AccountToken.account_and_contexts_query(account, [context]))
   end
 
-  def deliver_account_update_email_instructions(
-        %Account{} = account,
-        current_email,
-        update_email_url_fun
-      )
-      when is_function(update_email_url_fun, 1) do
-    {encoded_token, account_token} =
-      AccountToken.build_email_token(account, "change:#{current_email}")
+  # def deliver_account_update_email_instructions(
+  #       %Account{} = account,
+  #       current_email,
+  #       update_email_url_fun
+  #     )
+  #     when is_function(update_email_url_fun, 1) do
+  #   {encoded_token, account_token} =
+  #     AccountToken.build_email_token(account, "change:#{current_email}")
 
-    Repo.insert!(account_token)
+  #   Repo.insert!(account_token)
 
-    AccountNotifier.deliver_update_email_instructions(
-      account,
-      update_email_url_fun.(encoded_token)
-    )
-  end
+  #   AccountNotifier.deliver_update_email_instructions(
+  #     account,
+  #     update_email_url_fun.(encoded_token)
+  #   )
+  # end
 
   def change_account_password(account, attrs \\ %{}) do
     Account.password_changeset(account, attrs, hash_password: false)
@@ -133,20 +134,20 @@ defmodule BlogApi.Accounts do
 
   ## Confirmation
 
-  def deliver_account_confirmation_instructions(%Account{} = account, confirmation_url_fun)
-      when is_function(confirmation_url_fun, 1) do
-    if account.confirmed_at do
-      {:error, :already_confirmed}
-    else
-      {encoded_token, account_token} = AccountToken.build_email_token(account, "confirm")
-      Repo.insert!(account_token)
+  # def deliver_account_confirmation_instructions(%Account{} = account, confirmation_url_fun)
+  #     when is_function(confirmation_url_fun, 1) do
+  #   if account.confirmed_at do
+  #     {:error, :already_confirmed}
+  #   else
+  #     {encoded_token, account_token} = AccountToken.build_email_token(account, "confirm")
+  #     Repo.insert!(account_token)
 
-      AccountNotifier.deliver_confirmation_instructions(
-        account,
-        confirmation_url_fun.(encoded_token)
-      )
-    end
-  end
+  #     AccountNotifier.deliver_confirmation_instructions(
+  #       account,
+  #       confirmation_url_fun.(encoded_token)
+  #     )
+  #   end
+  # end
 
   def confirm_account(token) do
     with {:ok, query} <- AccountToken.verify_email_token_query(token, "confirm"),
@@ -169,16 +170,16 @@ defmodule BlogApi.Accounts do
 
   ## Reset password
 
-  def deliver_account_reset_password_instructions(%Account{} = account, reset_password_url_fun)
-      when is_function(reset_password_url_fun, 1) do
-    {encoded_token, account_token} = AccountToken.build_email_token(account, "reset_password")
-    Repo.insert!(account_token)
+  # def deliver_account_reset_password_instructions(%Account{} = account, reset_password_url_fun)
+  #     when is_function(reset_password_url_fun, 1) do
+  #   {encoded_token, account_token} = AccountToken.build_email_token(account, "reset_password")
+  #   Repo.insert!(account_token)
 
-    AccountNotifier.deliver_reset_password_instructions(
-      account,
-      reset_password_url_fun.(encoded_token)
-    )
-  end
+  #   AccountNotifier.deliver_reset_password_instructions(
+  #     account,
+  #     reset_password_url_fun.(encoded_token)
+  #   )
+  # end
 
   def get_account_by_reset_password_token(token) do
     with {:ok, query} <- AccountToken.verify_email_token_query(token, "reset_password"),

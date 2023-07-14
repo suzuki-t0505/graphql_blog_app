@@ -22,7 +22,9 @@ jobs:
           path: deps
           key: ${{runner.os}}-mix-${{hashFiles('**/mix.lock')}}
       - name: check
-        run: ls $HOME
+        run: |
+          ls $HOME
+          ls $HOME/work
       - name: Install dependencies
         if: steps.mix-cache.outputs.cache-hit != 'true'
         run: |

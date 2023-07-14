@@ -35,6 +35,17 @@ jobs:
           mix deps.get
           mix deps.compile
           
+  check:
+    needs: dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Github
+        uses: actions/checkout@v2
+      - name: current_directory
+        run: pwd
+      - name: current_directory for ls
+        run: ls
+          
   mix-test:
     needs: dependencies
     runs-on: ubuntu-latest

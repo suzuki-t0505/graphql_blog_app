@@ -29,7 +29,7 @@ export default function App() {
   const phoenixSocket = new Socket('ws://localhost:4000/socket', {
     params: { authorization: authToken },
     logger: (kind, msg, data) => {
-      console.log(`${kind}: ${msg}`, data)
+      // console.log(`${kind}: ${msg}`, data)
     }
   });
 

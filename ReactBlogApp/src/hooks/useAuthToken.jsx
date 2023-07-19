@@ -32,5 +32,5 @@ export const useAuthToken = () => {
     }
   }, [authToken]);
 
-  return { authToken, setAuthToken, getAuthToken, saveAuthToken, deleteAuthToken }
+  return { authToken, getAuthToken, saveAuthToken, deleteAuthToken }
 }

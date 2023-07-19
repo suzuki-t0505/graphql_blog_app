@@ -1,21 +1,12 @@
-import { AuthForm } from "./AuthForm";
-import { Button, View, SafeAreaView } from "react-native";
-import { Header } from "./Header";
-import { useAuthMutation } from "./hooks/useAuthMutation";
+import { AuthForm } from "./components/AuthForm";
+import { View } from "react-native";
+import { Header } from "./components/Header";
 
-export const Register = (props) => {
-  const { formState, setFormState, register } = useAuthMutation(props.saveAuthToken, props.navigation);
-  
+export const Register = () => {
   return (
     <View>
-      <Header {...props} />
-      <SafeAreaView>
-        <AuthForm formState={formState} setFormState={setFormState} />
-        <Button
-          title='Register'
-          onPress={register}
-        />
-      </SafeAreaView>
+      <Header />
+      <AuthForm type="register" />
     </View>
   )
 };

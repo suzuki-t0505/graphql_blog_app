@@ -1,22 +1,13 @@
-import { View, SafeAreaView, Button } from 'react-native'
-import { Header } from './Header'
-import { AuthForm } from './AuthForm';
-import { useAuthMutation } from './hooks/useAuthMutation';
+import { View } from 'react-native'
+import { Header } from './components/Header'
+import { AuthForm } from './components/AuthForm';
 
 
-export const Login = (props) => {
-  const { formState, setFormState, login } =  useAuthMutation(props.saveAuthToken, props.navigation);
-
+export const Login = () => {
   return (
     <View>
-      <Header {...props} />
-      <SafeAreaView>
-        <AuthForm formState={formState} setFormState={setFormState} />
-        <Button
-          title='Login'
-          onPress={login}
-        />
-      </SafeAreaView>
+      <Header />
+      <AuthForm type="login" />
     </View>
   )
 };

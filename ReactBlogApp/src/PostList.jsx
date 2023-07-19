@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text } from "react-native";
-import { PostCard } from "./PostCard";
-import { Header } from "./Header";
+import { PostCard } from "./components/PostCard";
+import { Header } from "./components/Header";
 
 export const PostList = (props) => {
   return(

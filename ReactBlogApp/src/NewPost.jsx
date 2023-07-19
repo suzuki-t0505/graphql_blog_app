@@ -1,7 +1,8 @@
 import { Button, SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
-import { Header } from './Header'
+import { Header } from './components/Header'
 import { useCallback, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
+import { useNavigation } from "./context/NavigationContext";
 
 const CREATE_POST_MUTATION = gql`
   mutation($title: String! $body: String! $type: Int! $topic: String!){
@@ -44,6 +45,8 @@ export const NewPost = (props) => {
     }
   }, [formState]);
 
+  const navigation = useNavigation();
+
   const [createPost] = useMutation(CREATE_POST_MUTATION, {
     variables: {
       title: formState.title,
@@ -54,7 +57,7 @@ export const NewPost = (props) => {
     onCompleted: (test => {
       console.log(test)
       props.refetch();
-      props.navigation.navigate('Home');
+      navigation.navigate('Home');
     })
   });
 

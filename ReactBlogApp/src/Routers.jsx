@@ -5,6 +5,8 @@ import { NewPost } from './NewPost';
 import { PostList } from './PostList';
 import { gql, useQuery } from '@apollo/client';
 import { Register } from './Register';
+import { Navigation } from './context/NavigationContext';
+import { useAuthTokenContext } from './context/AuthContext';
 
 const POST_QUERY = gql`
   {
@@ -35,46 +37,42 @@ const POST_ADDED_SUBSCRIPTION = gql`
 
 export const Routers = (props) => {
   const Stack = createNativeStackNavigator();
-  const {authToken, saveAuthToken, deleteAuthToken} = props;
+  const { authToken } = useAuthTokenContext();
   const { loading, data, refetch, subscribeToMore } = useQuery(POST_QUERY);
 
   subscribeToMore({
     document: POST_ADDED_SUBSCRIPTION,
     updateQuery: (prev, { subscriptionData }) => {
-      console.log(prev)
-      console.log(subscriptionData)
       if (!subscriptionData.data) return prev;
       const newPost = subscriptionData.data.postAdded;
       const exists = prev.posts.find(({ id }) => id === newPost.id);
       if (exists) return prev;
-
-      console.log(Object.assign({}, prev, {posts: [newPost, ...prev.posts]}))
-
       return Object.assign({}, prev, {
         posts: [newPost, ...prev.posts]
       });
     }
   });
+  
 
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen name="Home">
-          {(props) => <PostList {...props} authToken={authToken} deleteAuthToken={deleteAuthToken} data={data} loading={loading} />}
+          { ({navigation}) => <Navigation navigation={navigation}><PostList data={data} loading={loading} /></Navigation> }
         </Stack.Screen>
         {authToken ? (
           <Stack.Screen name="NewPost">
-            {(props) => <NewPost {...props} authToken={authToken} deleteAuthToken={deleteAuthToken} refetch={refetch} />}
+            { ({navigation}) => <Navigation navigation={navigation}><NewPost refetch={refetch} /></Navigation> }
           </Stack.Screen>
           ) : null
         }
         {!authToken ? (
           <>
             <Stack.Screen name="Login">
-              {(props) => <Login {...props} authToken={authToken} saveAuthToken={saveAuthToken} deleteAuthToken={deleteAuthToken} />}
+              { ({navigation}) => <Navigation navigation={navigation}><Login /></Navigation> }
             </Stack.Screen>
             <Stack.Screen name="Register">
-              {(props) => <Register {...props} authToken={authToken} saveAuthToken={saveAuthToken} deleteAuthToken={deleteAuthToken} />}
+              { ({navigation}) => <Navigation navigation={navigation}><Register /></Navigation> }
             </Stack.Screen>
           </>
           ) : null

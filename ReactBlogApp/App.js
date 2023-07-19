@@ -6,6 +6,7 @@ import { Routers } from './src/Routers';
 import * as AbsintheSocket from "@absinthe/socket";
 import { createAbsintheSocketLink } from "@absinthe/socket-apollo-link";
 import { hasSubscription } from "@jumpn/utils-graphql";
+import { AuthToken } from "./src/context/AuthContext";
 
 export default function App() {
   const { authToken, getAuthToken, saveAuthToken, deleteAuthToken } = useAuthToken();
@@ -50,7 +51,9 @@ export default function App() {
 
   return (
     <ApolloProvider client={client}>
-      <Routers authToken={authToken} getAuthToken={getAuthToken} saveAuthToken={saveAuthToken} deleteAuthToken={deleteAuthToken} />
+      <AuthToken authToken={authToken} getAuthToken={getAuthToken} saveAuthToken={saveAuthToken} deleteAuthToken={deleteAuthToken}>
+        <Routers />
+      </AuthToken>
     </ApolloProvider>
   );
 }
